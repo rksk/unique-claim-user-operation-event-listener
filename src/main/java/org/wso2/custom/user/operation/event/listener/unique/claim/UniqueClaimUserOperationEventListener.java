@@ -1,5 +1,7 @@
 package org.wso2.custom.user.operation.event.listener.unique.claim;
 
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.core.AbstractIdentityUserOperationEventListener;
@@ -11,7 +13,6 @@ import org.wso2.carbon.user.core.UserCoreConstants;
 import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.user.core.UserStoreManager;
 import org.wso2.carbon.user.core.util.UserCoreUtil;
-import org.wso2.carbon.utils.xml.StringUtils;
 import org.wso2.custom.user.operation.event.listener.unique.claim.internal.ServiceComponent;
 
 import java.util.Arrays;
@@ -23,7 +24,7 @@ import java.util.Properties;
  */
 public class UniqueClaimUserOperationEventListener extends AbstractIdentityUserOperationEventListener {
 
-    private static Log log = LogFactory.getLog(UniqueClaimUserOperationEventListener.class);
+    private static final Log log = LogFactory.getLog(UniqueClaimUserOperationEventListener.class);
     private static final String EVENT_LISTENER_TYPE = "org.wso2.carbon.user.core.listener.UserOperationEventListener";
 
     private static Properties properties;
@@ -31,7 +32,7 @@ public class UniqueClaimUserOperationEventListener extends AbstractIdentityUserO
     public void init() {
         properties = IdentityUtil.readEventListenerProperty(EVENT_LISTENER_TYPE, this.getClass().getName())
                 .getProperties();
-        if (properties == null || properties.size() == 0) {
+        if (properties == null || properties.isEmpty()) {
             log.info("No unique claims has been configured!");
         }
     }
@@ -43,7 +44,7 @@ public class UniqueClaimUserOperationEventListener extends AbstractIdentityUserO
         if (orderId != IdentityCoreConstants.EVENT_LISTENER_ORDER_ID) {
             return orderId;
         }
-        // This listener should execute before all the other listeners.
+        // This listener should be executed before all the other listeners.
         // 0 and 1 are already reserved for audit loggers, hence using 2.
         return 2;
     }
@@ -104,38 +105,38 @@ public class UniqueClaimUserOperationEventListener extends AbstractIdentityUserO
             return;
         }
 
-        String message;
         String domainName = userStoreManager.getRealmConfiguration().getUserStoreProperty(
                 UserCoreConstants.RealmConfig.PROPERTY_DOMAIN_NAME);
         String usernameWithUserstoreDomain = UserCoreUtil.addDomainToName(username, domainName);
 
+        // Get userstoreManager from realm since received one might be a secondary userstore
         UserStoreManager userStoreMgr = getUserstoreManager(userStoreManager.getTenantId());
         String[] userList = userStoreMgr.getUserList(claimUri, claimValue, profile);
 
-        if (userList == null || userList.length == 0) {
+        if (ArrayUtils.isEmpty(userList)) {
             return;
         } else if (userList.length == 1) {
-            if (log.isDebugEnabled()) {
-                log.debug("Found single user " + userList[0] + " with the " + claimUri + ": " + claimValue);
-            }
             if (usernameWithUserstoreDomain.equalsIgnoreCase(userList[0])) {
                 return;
             }
-            message = "A different user was found with the same claim(" + claimUri + ") value " + claimValue + ": "
-                        + userList[0];
+            if (log.isDebugEnabled()) {
+                log.debug("A different user was found with the same claim(" + claimUri + ") value " + claimValue
+                        + ": " + userList[0]);
+            }
         } else {
-            message = "Multiple users found with the same claim(" + claimUri + ") value " + claimValue + ": "
-                    + Arrays.toString(userList);
+            if (log.isDebugEnabled()) {
+                log.debug("Multiple users found with the same claim(" + claimUri + ") value " + claimValue + ": "
+                        + Arrays.toString(userList));
+            }
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug(message);
-        }
-        String configuredMessage = "The value define for " + claimUri + " is already in use by a different user!";
+        String configuredMessage = "The value defined for " + claimUri + " is already in use by a different user!";
         Object propertyValue = properties.get(claimUri);
         if (propertyValue != null) {
             configuredMessage = propertyValue.toString();
         }
+
+        // PolicyViolationException is used to avoid returning the 500 status code for SCIM APIs
         throw new UserStoreException(configuredMessage, new PolicyViolationException(configuredMessage));
     }
 
