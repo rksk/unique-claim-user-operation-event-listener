@@ -9,8 +9,8 @@ import org.wso2.carbon.identity.core.util.IdentityCoreConstants;
 import org.wso2.carbon.identity.core.util.IdentityUtil;
 import org.wso2.carbon.identity.mgt.policy.PolicyViolationException;
 import org.wso2.carbon.user.api.UserRealm;
-import org.wso2.carbon.user.api.UserStoreClientException;
 import org.wso2.carbon.user.core.UserCoreConstants;
+import org.wso2.carbon.user.core.UserStoreClientException;
 import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.user.core.UserStoreManager;
 import org.wso2.carbon.user.core.util.UserCoreUtil;
@@ -138,7 +138,7 @@ public class UniqueClaimUserOperationEventListener extends AbstractIdentityUserO
         }
 
         // PolicyViolationException is used to avoid returning the 500 status code for SCIM APIs
-        throw new UserStoreException(new UserStoreClientException(configuredMessage, new PolicyViolationException(configuredMessage)));
+        throw new UserStoreException(new UserStoreClientException(configuredMessage));
     }
 
     private UserStoreManager getUserstoreManager(int tenantId) throws UserStoreException {
