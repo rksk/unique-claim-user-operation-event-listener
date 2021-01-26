@@ -137,8 +137,10 @@ public class UniqueClaimUserOperationEventListener extends AbstractIdentityUserO
             configuredMessage = propertyValue.toString();
         }
 
-        // PolicyViolationException is used to avoid returning the 500 status code for SCIM APIs
-        throw new UserStoreException(new UserStoreClientException(configuredMessage));
+        // PolicyViolationException is used in self-registration APIs
+        // UserStoreClientException is used in SCIM APIs
+        throw new UserStoreException(configuredMessage, new UserStoreClientException(configuredMessage,
+                new PolicyViolationException(configuredMessage)));
     }
 
     private UserStoreManager getUserstoreManager(int tenantId) throws UserStoreException {
