@@ -1,6 +1,8 @@
 # User Operation Event Listener to keep uniqueness of claims
 
 This User Operation Event Listener to keep uniqueness for a given set of claims (eg: email, phone number) of users on [WSO2 Identity Server](https://wso2.com/identity-and-access-management/).
+
+Note: This is included OOTB in the 5.10.0 version if you have access to WSO2 updates.
  
 ### Steps to deploy
 - Build the component by running "mvn clean install"
