@@ -2,7 +2,7 @@
 
 This User Operation Event Listener to keep uniqueness for a given set of claims (eg: email, phone number) of users on [WSO2 Identity Server](https://wso2.com/identity-and-access-management/).
 
-Note: This is included OOTB in the 5.10.0 version if you have access to WSO2 updates and more info on the OOTB feature can be found at [this blog](https://chathurangapriyadarshana.medium.com/manage-user-claims-uniqueness-on-the-wso2-identity-server-1be461934b7e).
+Note: This will be included OOTB in the upcoming WSO2 IS 5.12.0 release and also in the 5.10.0 & 5.11.0 version as an update (updates are available only for subscription customers of WSO2). More info on the OOTB feature can be found at [this blog](https://chathurangapriyadarshana.medium.com/manage-user-claims-uniqueness-on-the-wso2-identity-server-1be461934b7e).
 
  
 ### Steps to deploy the extension
