@@ -2,9 +2,10 @@
 
 This User Operation Event Listener to keep uniqueness for a given set of claims (eg: email, phone number) of users on [WSO2 Identity Server](https://wso2.com/identity-and-access-management/).
 
-Note: This is included OOTB in the 5.10.0 version if you have access to WSO2 updates.
+Note: This is included OOTB in the 5.10.0 version if you have access to WSO2 updates and more info on the OOTB feature can be found at [this blog](https://chathurangapriyadarshana.medium.com/manage-user-claims-uniqueness-on-the-wso2-identity-server-1be461934b7e).
+
  
-### Steps to deploy
+### Steps to deploy the extension
 - Build the component by running "mvn clean install"
 - Copy following jar file which can be found in target directory into <IS_HOME>/repository/components/dropins/
     - unique-claim-user-operation-event-listener-1.0.0.jar
