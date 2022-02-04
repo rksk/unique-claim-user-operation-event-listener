@@ -26,6 +26,7 @@ public class UniqueClaimUserOperationEventListener extends AbstractIdentityUserO
 
     private static final Log log = LogFactory.getLog(UniqueClaimUserOperationEventListener.class);
     private static final String EVENT_LISTENER_TYPE = "org.wso2.carbon.user.core.listener.UserOperationEventListener";
+    private static final String USERNAME_CLAIM = "http://wso2.org/claims/username";
 
     private static Properties properties;
 
@@ -63,6 +64,11 @@ public class UniqueClaimUserOperationEventListener extends AbstractIdentityUserO
         if (!isEnable()) {
             return true;
         }
+        // Allow making username unique across userstores
+        if (properties != null && properties.containsKey(USERNAME_CLAIM)) {
+            checkIfClaimDuplicated(userName, USERNAME_CLAIM, userName, profile, userStoreManager);
+        }
+        // Check the claim list sent in the request
         checkIfClaimDuplicated(userName, claims, profile, userStoreManager);
         return true;
     }

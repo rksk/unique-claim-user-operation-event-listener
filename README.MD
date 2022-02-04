@@ -19,6 +19,7 @@ Note: This will be included OOTB in the upcoming WSO2 IS 5.12.0 release and also
     enable = true
     properties."http://wso2.org/claims/emailaddress" = "The specified email address is already in use by a different user!"
     properties."http://wso2.org/claims/mobile" = "The specified mobile number is already in use by a different user!"
+    properties."http://wso2.org/claims/username" = "The username is already in use by a different user!"
 
     ```
   - The last two lines of above config block defines which claims you want to make unique. You can add any number of claims in the following format.
